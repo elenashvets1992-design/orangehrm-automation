@@ -11,15 +11,16 @@ test.describe('Add employee', () => {
     await employeeListPage.clickAdd();
   });
 
-  test('create a new employee', async ({ addEmployeePage }) => {
+  test('Create a new employee', async ({ addEmployeePage }) => {
     const employee = buildEmployee();
 
     await addEmployeePage.createEmployee(employee);
     await addEmployeePage.expectEmployeeCreated();
   });
 
-  test('required fields are validated', async ({ addEmployeePage }) => {
+  test('Required fields are validated', async ({ addEmployeePage }) => {
     await addEmployeePage.save();
     await addEmployeePage.expectRequiredFieldErrors();
   });
+
 });

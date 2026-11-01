@@ -4,6 +4,7 @@ import { DashboardPage } from '../pages/dashboard.page';
 import { AddEmployeePage } from '../pages/PIM/add-employee.page';
 import { EmployeeListPage } from '../pages/PIM/employee-list.page';
 import { SidebarComponent } from '../components/sidebar.component';
+import { EmployeeDetailsPage } from '../pages/PIM/employee-details.page';
 
 
 // pages that can be asked by name in tests
@@ -13,6 +14,7 @@ type Fixtures = {
   addEmployeePage: AddEmployeePage;
   employeeListPage: EmployeeListPage;
   sidebar: SidebarComponent;
+  employeeDetailsPage: EmployeeDetailsPage;
 };
 
 export const test = base.extend<Fixtures>({
@@ -31,6 +33,9 @@ export const test = base.extend<Fixtures>({
   sidebar: async ({ page }, use) => {
     await use(new SidebarComponent(page));
   },
+  employeeDetailsPage: async ({ page }, use) => {
+    await use(new EmployeeDetailsPage(page));
+},
 });
 
 // reexport

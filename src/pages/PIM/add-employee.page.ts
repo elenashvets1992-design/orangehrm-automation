@@ -21,12 +21,12 @@ export class AddEmployeePage extends BasePage {
         this.saveButton = page.getByRole('button', { name: 'Save' });
     }
 
-//Open page
+// Open page by url
     async open() {
         await this.goto(routes.addEmployee);
     }
 
-//Create employee
+// Create employee
     async createEmployee(employee: Employee) {
         await this.firstNameInput.fill(employee.firstName);
         await this.middleNameInput.fill(employee.middleName);
@@ -37,15 +37,15 @@ export class AddEmployeePage extends BasePage {
 
 // Check opening details page w=for new employee 
     async expectEmployeeCreated() {
-        await expect(this.page).toHaveURL(/viewPersonalDetails/);
+        await expect(this.page).toHaveURL(/viewPersonalDetails\/empNumber\/\d+/);
     }
 
-//Check for negative test with empty field #1
+// Check empty requared field
     async save() {
         await this.saveButton.click();
     }
 
-//Check for negative test with empty field #1
+// Check error message with empty requared field
     async expectRequiredFieldErrors() {
         await expect(this.page.getByText('Required', { exact: true })).toHaveCount(2);
         await expect(this.page).toHaveURL(/addEmployee/);
