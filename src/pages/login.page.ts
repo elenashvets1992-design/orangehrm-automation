@@ -30,7 +30,7 @@ export class LoginPage extends BasePage {
         await this.loginButton.click();
     }
 
-    // negative test for login
+    // negative check for login
     async expectInvalidCredentials() {
         await expect(this.errorAlert).toBeVisible();
         await expect(this.errorAlert).toContainText('Invalid credentials');
