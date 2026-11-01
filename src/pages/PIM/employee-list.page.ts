@@ -1,10 +1,14 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { BasePage } from '../base.page';
+import { Employee } from '../../data/employee.types';
 
 export class EmployeeListPage extends BasePage {
     private readonly addButton: Locator;
     private readonly employeeIdFilter: Locator;
     private readonly searchButton: Locator;
+    private readonly employeeNameFilter: Locator;
+    private readonly resetButton: Locator;
+    private readonly recordsCounter: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -20,6 +24,20 @@ export class EmployeeListPage extends BasePage {
         
         //Search button
         this.searchButton = page.getByRole('button', { name: 'Search' });
+
+        //Employee name field
+        this.employeeNameFilter = page
+            .locator('.oxd-table-filter')
+            .locator('.oxd-input-group', { hasText: 'Employee Name' })
+            .getByPlaceholder('Type for hints...');
+
+        //Reset button   
+        this.resetButton = page.getByRole('button', { name: 'Reset' });
+
+        //Employee's counter  
+        this.recordsCounter = page
+            .locator('.orangehrm-horizontal-padding')
+            .getByText(/\(\d+\)\s+Records? Found/);
 
     }
     
@@ -53,6 +71,33 @@ export class EmployeeListPage extends BasePage {
     // Click the cell by Id
     async openEmployee(employeeId: string) {
         await this.resultRow(employeeId).getByRole('cell', { name: employeeId, exact: true }).click();
+    }
+
+    // Search by employee name( typing in the field and than chosing from the list)
+    async searchByName(employee: Employee) {
+        await this.employeeNameFilter.pressSequentially(employee.lastName);
+        await this.page.getByRole('option').filter({ hasText: employee.lastName }).click();
+        await this.searchButton.click();
+    }
+
+    //Reset button check
+    async reset() {
+        await this.resetButton.click();
+    }
+
+    //Check employee Id filter after reset
+    async expectEmployeeIdFilterEmpty() {
+        await expect(this.employeeIdFilter).toHaveValue('');
+    }
+
+    //Check count of the employee in counter after updating
+    async expectRecordsCounter(count: number) {
+        await expect(this.recordsCounter).toContainText(`(${count})`);
+    }
+
+    //CHeck the counter is visible
+    async expectRecordsCounterShown() {
+        await expect(this.recordsCounter).toBeVisible();
     }
     
     //Open delete dialog check

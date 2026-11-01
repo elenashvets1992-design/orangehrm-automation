@@ -15,6 +15,9 @@ UI test automation for the [OrangeHRM demo](https://opensource-demo.orangehrmliv
 - **Duplicate Employee ID validation.** Entering an existing Employee ID displays a "Employee Id already exists" validation error, and the form is not submitted.
 - **Required fields on creat screen.** Submitting the form with empty required fields displays validation errors for First Name and Last Name, and the form is not submitted.
 - **Required fields on edit screen.** Clearing the first and the last name shows a validation error for each field, the form is not submitted, and after a reload the employee keeps the old names.
+- **Search by Employee Name.** Searching for an employee using the autocomplete name filter successfully locates and displays the correct record in the results table.
+- **Reset Search Filter.** Clicking the Reset button on the employee list clears all applied search parameters and restores the complete list of employee records.
+- **Records Found Counter Verification.** The total records counter accurately updates to reflect the current state of the database and matches the actual number of records displayed in the table.
 - **Delete employee flow.** Confirming the deletion removes the employee, which is checked by searching for the same Id afterwards. Cancelling the deletion dialog keeps the employee.
 
 
