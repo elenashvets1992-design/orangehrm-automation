@@ -2,6 +2,9 @@ import { Locator, Page, expect } from '@playwright/test';
 import { BasePage } from '../base.page';
 import { routes } from '../../config/routes';
 import { Employee } from '../../data/employee.types';
+import path from 'path';
+
+const DEFAULT_AVATAR_PATH = path.resolve(process.cwd(), 'src/data/avatar.jpeg');
 
 export class AddEmployeePage extends BasePage {
     private readonly firstNameInput: Locator;
@@ -21,6 +24,12 @@ export class AddEmployeePage extends BasePage {
         this.saveButton = page.getByRole('button', { name: 'Save' });
     }
 
+        // Method for file uploading
+        async uploadProfilePicture(filePath: string = DEFAULT_AVATAR_PATH) {
+            const fileInput = this.page.locator('.orangehrm-employee-image input[type="file"]');
+            await fileInput.setInputFiles(filePath);
+        }
+
 // Open page by url
     async open() {
         await this.goto(routes.addEmployee);
@@ -32,12 +41,13 @@ export class AddEmployeePage extends BasePage {
         await this.middleNameInput.fill(employee.middleName);
         await this.lastNameInput.fill(employee.lastName);
         await this.employeeIdInput.fill(employee.employeeId);
+        await this.uploadProfilePicture();
         await this.saveButton.click();
     }
 
 // Check opening details page w=for new employee 
     async expectEmployeeCreated() {
-        await expect(this.page).toHaveURL(/viewPersonalDetails\/empNumber\/\d+/);
+        await expect(this.page).toHaveURL(/viewPersonalDetails\/empNumber\/\d+/, { timeout: 10000 });;
     }
 
 // Check empty requared field

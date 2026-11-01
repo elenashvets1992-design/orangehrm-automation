@@ -8,8 +8,9 @@ UI test automation for the [OrangeHRM demo](https://opensource-demo.orangehrmliv
 - **Add employee**: successful creation, required-field validation
 - **Search employee**: found by Employee Id, nothing found for a non-existent Id
 - **Employee details**: the details page opens with the data of the created employee
+- **Edit employee**: names, Other Id, driver's license, license expiry date, date of birth, nationality, marital status and gender are changed, then the page is reloaded and every value is verified
 
-Planned: edit employee information and verify that the changes were saved.
+Planned: add additional case for test( serch or filtering) and deliting
 
 
 ## Setup
@@ -54,11 +55,15 @@ playwright.config.ts
 - **Navigation like a user.** The employee test goes through the menu (Dashboard, PIM, Add) instead of opening a direct URL. A direct URL page method is kept as a fallback.
 - **Search by Employee Id.** The Employee Name filter is an autocomplete, which is less stable. The Id is unique, so the result is exactly one row.
 - **Assertions.** Built-in Playwright assertions are used because they retry until the page reaches the expected state, so no manual waits or sleeps are needed. Assertions live in page objects (`expectLoaded`, `expectEmployeeFound`) to keep tests short and avoid duplicating checks.
+- **Verifying a save.** After editing, the page is reloaded, so the values come from the server and not from the form. Every changed field is checked with soft assertions, so one run shows all fields that were not saved.
 - **Locators.** Role, placeholder and text first. The app uses generated `oxd-*` classes and `data-v-*` attributes, so CSS selectors are avoided. Exceptions are explained in code comments:
-  - Employee Id has no name, id or placeholder and its label is not linked to the input, so it is found by the label text inside its block.
+  - Employee Id and similar fields have no name, id or placeholder and their labels are not linked to the inputs, so they are found by the label text inside their block.
   - The Add button is scoped to the page header, because its text includes an icon.
   - The "No Records Found" text is scoped to the results block, because a popup with the same text disappears by timer.
-- **Scenario structure.** The dependent flow (create, search, open details) is one test split into `test.step` blocks, so the order is guaranteed and the report shows which step failed. Independent checks are separate tests.
+  - Dropdowns are custom widgets, not `<select>`, so they are opened by a click and the option is chosen from the opened list.
+  - Radio inputs are hidden by styles, so the gender is selected by clicking its label.
+  - Date fields have a calendar popup, so the value is typed like a user does and checked right after typing.
+- **Scenario structure.** Tests are grouped by feature (login, PIM). The steps of a dependent flow are split with `test.step`, so the order is guaranteed and the report shows which step failed. Negative cases are separate short tests, so a failure in one of them does not hide the others.
 - **Test selection.** Login is a supporting flow here, so only the happy path and one negative case are covered. For the PIM part: one full flow plus two negative cases (empty required fields, non-existent Id). More validation cases could be added as parameterized tests.
 - **Execution.** Tests run in parallel by default. In CI there is one worker (the demo site is shared) and retries.
 - **Reporting.** HTML report plus a list in the terminal. Screenshot, video and trace are saved only for failures.

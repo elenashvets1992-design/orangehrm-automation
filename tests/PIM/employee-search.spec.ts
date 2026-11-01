@@ -1,6 +1,6 @@
 import { test } from '../../src/fixtures/test.fixtures';
 import { env } from '../../src/config/env';
-import { buildEmployee } from '../../src/data/employee.factory';
+import { buildEmployee, buildEmployeeUpdate } from '../../src/data/employee.factory';
 
 test.describe('PIM employee flow', () => {
   test.beforeEach(async ({ loginPage, dashboardPage }) => {
@@ -16,6 +16,7 @@ test.describe('PIM employee flow', () => {
     employeeDetailsPage,
   }) => {
     const employee = buildEmployee();
+    const update = buildEmployeeUpdate();
 
     await test.step('Create a new employee', async () => {
       await sidebar.openMenu('PIM');
@@ -33,6 +34,14 @@ test.describe('PIM employee flow', () => {
     await test.step('Open employee details', async () => {
       await employeeListPage.openEmployee(employee.employeeId);
       await employeeDetailsPage.expectLoaded(employee);
+    });
+
+    await test.step('Edit employee information', async () => {
+      await employeeDetailsPage.edit(update);
+    });
+
+    await test.step('Verify the changes were saved', async () => {
+      await employeeDetailsPage.expectSaved(update);
     });
 
   });
