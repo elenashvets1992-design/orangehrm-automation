@@ -43,6 +43,7 @@ export class EmployeeDetailsPage extends BasePage {
         await expect(this.lastNameInput).toHaveValue(employee.lastName);
     }
 
+    //Editing all field in main div
     async edit(update: EmployeeUpdate & { licenseExpiryDate?: string; dateOfBirth?: string }) {
         await this.firstNameInput.fill(update.firstName);
         await this.middleNameInput.fill(update.middleName);
@@ -59,11 +60,11 @@ export class EmployeeDetailsPage extends BasePage {
         await expect(this.page.getByText('Successfully Updated')).toBeVisible();
     }
 
-    // reload the page to be sure that the values come from the server, not from the form
+    // reload the page and validating the data after updating
     async expectSaved(update: EmployeeUpdate) {
         await this.page.reload();
         await expect.soft(this.firstNameInput).toHaveValue(update.firstName);
-        await expect.soft(this.firstNameInput).toHaveValue(update.firstName);
+        await expect.soft(this.middleNameInput).toHaveValue(update.middleName);
         await expect.soft(this.lastNameInput).toHaveValue(update.lastName);
         await expect.soft(this.group('Other Id').locator('input')).toHaveValue(update.otherId);
         await expect.soft(this.group("Driver's License Number").locator('input')).toHaveValue(update.driverLicense);
@@ -71,6 +72,24 @@ export class EmployeeDetailsPage extends BasePage {
         await expect.soft(this.group('Date of Birth').locator('input')).toHaveValue(update.dateOfBirth);
         await expect.soft(this.group('Nationality').locator('.oxd-select-text-input')).toHaveText(update.nationality);
         await expect.soft(this.group('Marital Status').locator('.oxd-select-text-input')).toHaveText(update.maritalStatus);
-        await expect.soft(this.group('Gender').locator('label', { hasText: update.gender }).locator('input')).toBeChecked();
+        await expect.soft(this.group('Gender').getByRole('radio', { name: update.gender, exact: true })).toBeChecked();
     }
+
+    //Check the error when the required fields are empty
+    async clearRequiredFields() {
+        await this.firstNameInput.clear();
+        await expect(this.page.getByText('Required', { exact: true })).toHaveCount(1);
+        await this.lastNameInput.clear();
+        await expect(this.page.getByText('Required', { exact: true })).toHaveCount(2);
+    }
+
+    async save() {
+        await this.saveButton.click();
+    }
+
+    async reloadAndExpectLoaded(employee: Employee) {
+        await this.page.reload();
+        await this.expectLoaded(employee);
+    }       
+
 }

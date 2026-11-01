@@ -8,9 +8,15 @@ UI test automation for the [OrangeHRM demo](https://opensource-demo.orangehrmliv
 - **Add employee**: successful creation, required-field validation
 - **Search employee**: found by Employee Id, nothing found for a non-existent Id
 - **Employee details**: the details page opens with the data of the created employee
-- **Edit employee**: names, Other Id, driver's license, license expiry date, date of birth, nationality, marital status and gender are changed, then the page is reloaded and every value is verified
+- **Edit**: names, Other Id, driver's license, license expiry date, date of birth, nationality, marital status and gender are changed
+- **Verify**: the page is reloaded and every changed value is checked
 
-Planned: add additional case for test( serch or filtering) and deliting
+### Additional regression scenarios
+- **Duplicate Employee ID validation.** Entering an existing Employee ID displays a "Employee Id already exists" validation error, and the form is not submitted.
+- **Required fields on creat screen.** Submitting the form with empty required fields displays validation errors for First Name and Last Name, and the form is not submitted.
+- **Required fields on edit screen.** Clearing the first and the last name shows a validation error for each field, the form is not submitted, and after a reload the employee keeps the old names.
+- **Delete employee flow.** Confirming the deletion removes the employee, which is checked by searching for the same Id afterwards. Cancelling the deletion dialog keeps the employee.
+
 
 
 ## Setup

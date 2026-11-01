@@ -35,13 +35,23 @@ export class AddEmployeePage extends BasePage {
         await this.goto(routes.addEmployee);
     }
 
-// Create employee
-    async createEmployee(employee: Employee) {
+// Fill data in the fields 
+    async fillForm(employee: Employee) {
         await this.firstNameInput.fill(employee.firstName);
         await this.middleNameInput.fill(employee.middleName);
         await this.lastNameInput.fill(employee.lastName);
         await this.employeeIdInput.fill(employee.employeeId);
         await this.uploadProfilePicture();
+    }
+
+// Create new employee
+    async createEmployee(employee: Employee) {
+        await this.fillForm(employee);
+        await this.saveButton.click();
+    }
+
+// Check saving
+    async save() {
         await this.saveButton.click();
     }
 
@@ -50,14 +60,19 @@ export class AddEmployeePage extends BasePage {
         await expect(this.page).toHaveURL(/viewPersonalDetails\/empNumber\/\d+/, { timeout: 10000 });;
     }
 
-// Check empty requared field
-    async save() {
-        await this.saveButton.click();
-    }
-
 // Check error message with empty requared field
     async expectRequiredFieldErrors() {
         await expect(this.page.getByText('Required', { exact: true })).toHaveCount(2);
         await expect(this.page).toHaveURL(/addEmployee/);
-    }  
+    }
+
+// Check error message when Employee Id already exists
+    async expectEmployeeIdAlreadyExists() {
+        await expect(this.page.getByText('Employee Id already exists')).toBeVisible();
+    }
+
+// Check that user remain on the form after validation errors
+    async expectStillOnAddForm() {
+        await expect(this.page).toHaveURL(/addEmployee/);
+    }
 }

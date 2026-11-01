@@ -50,9 +50,34 @@ export class EmployeeListPage extends BasePage {
         });
     }
 
-    // Click the call by Id
+    // Click the cell by Id
     async openEmployee(employeeId: string) {
         await this.resultRow(employeeId).getByRole('cell', { name: employeeId, exact: true }).click();
+    }
+    
+    //Open delete dialog check
+    private async openDeleteDialog(employeeId: string) {
+        await this.resultRow(employeeId).locator('button:has(.bi-trash)').click();
+    }
+
+    //Delete employee
+    async deleteEmployee(employeeId: string) {
+        await this.openDeleteDialog(employeeId);
+        await this.page.getByRole('button', { name: 'Yes, Delete' }).click();
+    }
+
+    // Close 'Delete' pop-up
+    async cancelDeletion(employeeId: string) {
+        await this.openDeleteDialog(employeeId);
+        await this.page.getByRole('button', { name: 'No, Cancel' }).click();
+        await expect(this.page.getByText('Are you Sure?')).toBeHidden();
+    }
+
+    //Check that deleted employee doesn't exist in the list
+    async expectNoRecordsFound() {
+        await expect(
+        this.page.locator('.orangehrm-horizontal-padding').getByText('No Records Found'),
+        ).toBeVisible();
     }
 
 }
