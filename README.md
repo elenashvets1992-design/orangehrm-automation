@@ -39,6 +39,8 @@ npx playwright test --ui       # Playwright UI mode
 npx playwright show-report     # open the HTML report
 ```
 
+A login session is created by the `setup` project before the other tests. In UI mode or in the VS Code extension make sure that the `setup` project is enabled and runs first.
+
 ## Project structure
 
 ```

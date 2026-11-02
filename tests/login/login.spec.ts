@@ -1,6 +1,8 @@
 import { test } from '../../src/fixtures/test.fixtures';
 import { env } from '../../src/config/env';
 
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test.describe('Login', () => {
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.open();

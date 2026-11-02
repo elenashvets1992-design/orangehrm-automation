@@ -9,7 +9,9 @@ export class DashboardPage extends BasePage {
         super(page);
         this.heading = page.getByRole('heading', { name: 'Dashboard' });
     }
-
+    async open() {
+        await this.goto(routes.dashboard);
+    }
     async expectLoaded() {
         await expect(this.page).toHaveURL(routes.dashboard);    
         await expect(this.heading).toBeVisible();

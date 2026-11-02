@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-//import process from 'node:process';
+import { authFile } from './src/config/auth';
 import { env } from './src/config/env';
 
 export default defineConfig({
@@ -16,6 +16,12 @@ export default defineConfig({
     video: 'retain-on-failure', // debug artifacts will saved only on failure
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } }, 
+    // runs first, creates the saved session
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'], storageState: authFile },
+      dependencies: ['setup'],
+    },
   ],
 });

@@ -1,5 +1,4 @@
 import { test } from '../../src/fixtures/test.fixtures';
-import { env } from '../../src/config/env';
 import { buildEmployee, buildEmployeeUpdate } from '../../src/data/employee.factory';
 //import { TIMEOUT } from 'node:dns';
 
@@ -8,7 +7,7 @@ const random = Math.random().toString(36).substring(2, 7);
 test.describe('PIM employee flow', () => {
   test.beforeEach(async ({ loginPage, dashboardPage }) => {
     await loginPage.open();
-    await loginPage.login(env.adminUser, env.adminPassword);
+    //await loginPage.login(env.adminUser, env.adminPassword);
     await dashboardPage.expectLoaded();
   });
 

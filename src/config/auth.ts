@@ -1,0 +1,1 @@
+export const authFile = 'playwright/.auth/admin.json';
