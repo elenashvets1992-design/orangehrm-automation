@@ -8,6 +8,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI, // no test.only in CI
   retries: process.env.CI ? 2 : 0, // retries only in CI
   workers: process.env.CI ? 1 : undefined, // demo site is shared
+  timeout: 60_000, // tests go through the UI of a slow shared site
+  expect: { timeout: 10_000 },
   reporter: [['html', { open: 'never' }], ['list']],
   use: {
     baseURL: env.baseUrl, // from .env

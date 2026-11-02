@@ -9,6 +9,7 @@ export class EmployeeListPage extends BasePage {
     private readonly employeeNameFilter: Locator;
     private readonly resetButton: Locator;
     private readonly recordsCounter: Locator;
+    private readonly resultsSummary: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -21,6 +22,11 @@ export class EmployeeListPage extends BasePage {
             .locator('.oxd-table-filter')
             .locator('.oxd-input-group', { hasText: 'Employee Id' })
             .locator('input');
+
+        // Any of data means the list is loaded
+        this.resultsSummary = page
+            .locator('.orangehrm-horizontal-padding')
+            .getByText(/Records? Found/);
         
         //Search button
         this.searchButton = page.getByRole('button', { name: 'Search' });
@@ -48,6 +54,7 @@ export class EmployeeListPage extends BasePage {
 
     //Search by employee Id
     async searchByID(employeeId:string){
+        await expect(this.resultsSummary).toBeVisible();
         await this.employeeIdFilter.fill(employeeId);
         await this.searchButton.click();
     }
